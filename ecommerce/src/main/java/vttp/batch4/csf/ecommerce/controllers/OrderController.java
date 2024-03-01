@@ -37,9 +37,9 @@ public class OrderController {
     // SAVE ORDER INTO REPO
     try {
       poSvc.createNewPurchaseOrder(order);
-    } catch (Exception e) {
+    } catch (PurchaseOrderException e) {
       JsonObject badReq = Json.createObjectBuilder()
-        .add("error", "Unable to process order")
+        .add("errorMsg", "Unable to process order")
         .build();
 
       return ResponseEntity.badRequest().body(badReq.toString());

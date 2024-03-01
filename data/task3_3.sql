@@ -25,8 +25,12 @@ create table line_item (
     name varchar(64),
     quantity int,
     price decimal(3,2),
-    order_id int,
+    order_id varchar(128),
 
     primary key(line_item_id),
     constraint fk_order_id foreign key(order_id) references order_details(order_id)
 );
+
+grant all privileges on emart.* to anika@'%';
+
+flush privileges;

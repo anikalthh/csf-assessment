@@ -32,7 +32,6 @@ export class ConfirmCheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.createForm()
     this.lineItems$ = this.cartStore.getAllLineItems
-    console.log('>>> getting all line items from component store to display', this.lineItems$)
 
     // get number of items
     this.cartStore.getNumberOfItems.subscribe(
@@ -77,7 +76,6 @@ export class ConfirmCheckoutComponent implements OnInit {
         for (let li of cart) {
           this.order.cart.lineItems.push(li as LineItem)
         }
-        console.log('cart converted: ', this.orderItems)
       }
     )
     this.pdtSvc.checkout(this.order).then(
@@ -87,7 +85,8 @@ export class ConfirmCheckoutComponent implements OnInit {
       }
     ).catch(
       (err) => {
-        alert(`Error: ${err.error}`)
+        console.log(err)
+        alert(`Error: ${err.errorMsg}`)
       }
     )
   }
