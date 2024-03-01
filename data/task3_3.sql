@@ -22,15 +22,11 @@ create table line_item (
 
     line_item_id int auto_increment,
     product_id varchar(128),
-    name varchar(64),
+    name varchar(128),
     quantity int,
-    price decimal(3,2),
+    price decimal(10,3),
     order_id varchar(128),
 
     primary key(line_item_id),
     constraint fk_order_id foreign key(order_id) references order_details(order_id)
 );
-
-grant all privileges on emart.* to anika@'%';
-
-flush privileges;
