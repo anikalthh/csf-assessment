@@ -1,8 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { LineItem } from '../models';
+import { Cart, LineItem, Order } from '../models';
 import { Observable } from 'rxjs';
 import { CartStore } from '../cart.store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProductService } from '../product.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-confirm-checkout',
@@ -14,13 +16,17 @@ export class ConfirmCheckoutComponent implements OnInit {
   // dependencies
   private cartStore = inject(CartStore)
   private fb = inject(FormBuilder)
+  private pdtSvc = inject(ProductService)
+  private router = inject(Router)
 
   // vars
   lineItems$!: Observable<LineItem[]>
   totalAmount!: number
   form!: FormGroup
   numberOfItems!: number
-  // isFormValid!: boolean
+  order!: Order
+  orderItems: LineItem[] = []
+  cart!: Cart
 
   // lifecycle hooks
   ngOnInit(): void {
@@ -59,6 +65,31 @@ export class ConfirmCheckoutComponent implements OnInit {
 
   isFormValid() : boolean {
     return (this.numberOfItems > 0) && this.form.valid
+  }
+
+  // PLACE ORDER
+  placeOrder() {
+    this.order = this.form.value as Order
+    this.order.cart = <Cart>({lineItems: []})
+    console.log('order cart: ', this.order.cart)
+    this.cartStore.getAllLineItems.subscribe(
+      (cart) => {
+        for (let li of cart) {
+          this.order.cart.lineItems.push(li as LineItem)
+        }
+        console.log('cart converted: ', this.orderItems)
+      }
+    )
+    this.pdtSvc.checkout(this.order).then(
+      (success) => {
+        alert(`orderId: ${success.orderId}`)
+        this.router.navigate(['/'])
+      }
+    ).catch(
+      (err) => {
+        alert(`Error: ${err.error}`)
+      }
+    )
   }
 
 }

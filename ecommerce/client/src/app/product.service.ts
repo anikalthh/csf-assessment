@@ -1,6 +1,6 @@
 import {Injectable, inject} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, firstValueFrom} from "rxjs";
 import {Order, Product} from "./models";
 
 @Injectable()
@@ -28,5 +28,7 @@ export class ProductService {
   // not be marked
   checkout(order: Order) {
     // TODO Task 3
+    console.log('>>> checkout HTTP POST')
+    return firstValueFrom(this.http.post<any>('api/order', order))
   }
 }
