@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
-import {Observable} from 'rxjs';
-import {Router} from '@angular/router';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { CartStore } from './cart.store';
 
 @Component({
@@ -16,16 +16,28 @@ export class AppComponent implements OnInit {
   private cartStore = inject(CartStore)
 
   itemCount!: number
+  isCartValid!: boolean
 
   ngOnInit(): void {
     this.cartStore.getNumberOfItems.subscribe(
       (value) => {
         this.itemCount = value
+        console.log('item count: ', this.itemCount)
+        if (this.itemCount == 0) {
+          console.log('false')
+          this.isCartValid = false
+        } else {
+          console.log('true')
+
+          this.isCartValid = true
+        }
       }
     )
   }
 
   checkout(): void {
-    this.router.navigate([ '/checkout' ])
+    this.router.navigate(['/checkout'])
   }
+
+  
 }
